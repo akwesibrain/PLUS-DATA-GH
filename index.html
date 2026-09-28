@@ -2526,37 +2526,66 @@
         </div>
 
         <div class="checkout-field">
-          <label class="checkout-label" for="checkoutPhone"
-            >Recipient phone number</label
-          >
-          <div class="checkout-phone-row">
-            <input
-              type="tel"
-              id="checkoutPhone"
-              class="checkout-phone-input"
-              placeholder="0XX XXXXXXX"
-              inputmode="numeric"
-              autocomplete="tel"
-            />
-            <svg
-              class="checkout-phone-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M12 2a7 7 0 0 0-7 7c0 5.2 6.1 11.7 6.4 12a1 1 0 0 0 1.2 0c.3-.3 6.4-6.8 6.4-12a7 7 0 0 0-7-7z"
-                stroke="currentColor"
-                stroke-width="1.6"
-              />
-              <circle cx="12" cy="9" r="2.3" stroke="currentColor" stroke-width="1.6" />
-            </svg>
-          </div>
-          <div class="checkout-phone-error" id="checkoutPhoneError">
-            Enter a valid Ghana mobile number (e.g. 024XXXXXXX)
-          </div>
-        </div>
+         <label class="checkout-label" for="checkoutPhone">
+  Recipient phone number
+</label>
+
+<div class="checkout-phone-row">
+  <input
+    type="tel"
+    id="checkoutPhone"
+    class="checkout-phone-input"
+    placeholder="0XX XXXXXXX"
+    inputmode="numeric"
+    autocomplete="tel"
+  />
+
+  <svg
+    class="checkout-phone-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      d="M12 2a7 7 0 0 0-7 7c0 5.2 6.1 11.7 6.4 12a1 1 0 0 0 1.2 0c.3-.3 6.4-6.8 6.4-12a7 7 0 0 0-7-7z"
+      stroke="currentColor"
+      stroke-width="1.6"
+    />
+    <circle
+      cx="12"
+      cy="9"
+      r="2.3"
+      stroke="currentColor"
+      stroke-width="1.6"
+    />
+  </svg>
+</div>
+
+<div class="checkout-phone-error" id="checkoutPhoneError">
+  Enter a valid Ghana mobile number (e.g. 024XXXXXXX)
+</div>
+
+
+<!-- Paystack Receipt Email -->
+<div class="checkout-field">
+  <label class="checkout-label" for="checkoutEmail">
+    Email address
+  </label>
+
+  <input
+    type="email"
+    id="checkoutEmail"
+    class="checkout-phone-input"
+    placeholder="you@example.com"
+    autocomplete="email"
+    inputmode="email"
+  />
+
+  <div class="checkout-phone-error" id="checkoutEmailError">
+    Enter a valid email address
+  </div>
+</div>
 
         <button type="button" class="checkout-promo-toggle" id="checkoutPromoToggle">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
