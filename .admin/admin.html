@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="en-GH">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#060b1f">
+
+  <title>Plus Data Ghana — Admin Dashboard</title>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --bg: #060b1f;
+      --panel: #0b1330;
+      --panel-2: #0e1838;
+      --line: #1c2a5a;
+      --text: #e8edff;
+      --mute: #8b98c9;
+      --blue: #2f6bff;
+      --blue-2: #5d8bff;
+      --green: #22d3a0;
+      --amber: #f5a524;
+      --red: #f0506e;
+      --violet: #7c5cff;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      font-family: "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    /* =========================
+       AUTH SCREEN
+    ========================= */
+
+    #authScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(47, 107, 255, 0.18),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at bottom right,
+          rgba(124, 92, 255, 0.14),
+          transparent 35%
+        ),
+        var(--bg);
+    }
+
+    .auth-wrapper {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .logo-box {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--violet)
+      );
+      box-shadow:
+        0 18px 50px rgba(47, 107, 255, 0.25);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .auth-logo h1 {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .auth-logo p {
+      margin-top: 8px;
+      color: var(--mute);
+      font-size: 14px;
+    }
+
+    .auth-card {
+      background: rgba(11, 19, 48, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .auth-card h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      color: var(--mute);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5ff;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 50px;
+      padding: 0 15px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #070f29;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.2s ease;
+    }
+
+    .password-input {
+      padding-right: 48px;
+    }
+
+    .form-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(47, 107, 255, 0.12);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--mute);
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .password-toggle:hover {
+      color: var(--text);
+    }
+
+    .auth-error {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(240, 80, 110, 0.35);
+      background: rgba(240, 80, 110, 0.09);
+      color: #ff9eb0;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .auth-success {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(34, 211, 160, 0.35);
+      background: rgba(34, 211, 160, 0.09);
+      color: #6ff1c9;
+      font-size: 13px;
+    }
+
+    .login-button {
+      width: 100%;
+      height: 50px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(
+        135deg,
+        var(--blue),
+        #4b73ff
+      );
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .login-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(47, 107, 255, 0.25);
+    }
+
+    .login-button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .auth-footer {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--mute);
+      font-size: 11px;
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    #loadingScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+    }
+
+    .loading-box {
+      text-align: center;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.12);
+      border-top-color: var(--blue);
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    .loading-box p {
+      color: var(--mute);
+      font-size: 13px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* =========================
+       DASHBOARD
+    ========================= */
+
+    #dashboardApp {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 250px;
+      background: #080f28;
+      border-right: 1px solid var(--line);
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-logo strong {
+      font-size: 18px;
+    }
+
+    .sidebar-logo span {
+      display: block;
+      color: var(--mute);
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .nav {
+      padding: 18px 12px;
+    }
+
+    .nav-section {
+      margin-bottom: 8px;
+      color: #596a9f;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 8px 12px;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      margin-bottom: 3px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--mute);
+      text-align: left;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: rgba(47, 107, 255, 0.12);
+      color: #fff;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .main {
+      margin-left: 250px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 76px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 11, 31, 0.9);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .welcome h2 {
+      font-size: 17px;
+    }
+
+    .welcome p {
+      color: var(--mute);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: rgba(34, 211, 160, 0.08);
+      color: var(--green);
+      font-size: 11px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .logout-btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--mute);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .logout-btn:hover {
+      color: white;
+      border-color: var(--red);
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    .page-title {
+      margin-bottom: 24px;
+    }
+
+    .page-title h1 {
+      font-size: 25px;
+    }
+
+    .page-title p {
+      color: var(--mute);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    /* KPI */
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .kpi-label {
+      color: var(--mute);
+      font-size: 11px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .kpi-change {
+      color: var(--green);
+      font-size: 10px;
+      margin-top: 7px;
+    }
+
+    /* CARDS */
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      min-width: 0;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .card-subtitle {
+      color: var(--mute);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 260px;
+    }
+
+    .small-chart {
+      height: 210px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 5px;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--mute);
+      padding: 6px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .tab.active {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    /* TABLE */
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(28, 42, 90, 0.65);
+      text-align: left;
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    th {
+      color: var(--mute);
+      font-weight: 600;
+    }
+
+    td {
+      color: #dce3ff;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .badge.green {
+      color: var(--green);
+      background: rgba(34, 211, 160, 0.1);
+    }
+
+    .badge.amber {
+      color: var(--amber);
+      background: rgba(245, 165, 36, 0.1);
+    }
+
+    .badge.red {
+      color: var(--red);
+      background: rgba(240, 80, 110, 0.1);
+    }
+
+    .badge.blue {
+      color: var(--blue-2);
+      background: rgba(47, 107, 255, 0.1);
+    }
+
+    /* QUICK ACTIONS */
+
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px;
+      margin-bottom: 9px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #09112a;
+      cursor: pointer;
+    }
+
+    .quick-action:hover {
+      border-color: var(--blue);
+    }
+
+    .quick-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(47, 107, 255, 0.1);
+    }
+
+    .quick-action strong {
+      display: block;
+      font-size: 11px;
+    }
+
+    .quick-action span {
+      display: block;
+      color: var(--mute);
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
+    /* SYSTEM */
+
+    .health-row {
+      margin-bottom: 15px;
+    }
+
+    .health-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .health-top span:last-child {
+      color: var(--green);
+    }
+
+    .health-bar {
+      height: 7px;
+      border-radius: 5px;
+      background: #131f42;
+      overflow: hidden;
+    }
+
+    .health-progress {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+    }
+
+    /* EMPTY */
+
+    .empty-state {
+      padding: 35px 20px;
+      text-align: center;
+      color: var(--mute);
+      font-size: 11px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .grid-3 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        width: 70px;
+      }
+
+      .sidebar-logo {
+        padding: 20px 10px;
+        text-align: center;
+      }
+
+      .sidebar-logo strong {
+        font-size: 12px;
+      }
+
+      .sidebar-logo span,
+      .nav-section,
+      .nav-item span:not(.nav-icon) {
+        display: none;
+      }
+
+      .nav-item {
+        justify-content: center;
+        padding: 12px 5px;
+      }
+
+      .main {
+        margin-left: 70px;
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .content {
+        padding: 18px 15px;
+      }
+
+      .welcome p,
+      .status {
+        display: none;
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-card {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       LOADING SCREEN
+  ====================================================== -->
+
+  <div id="loadingScreen">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Checking secure admin session...</p>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       AUTH SCREEN
+  ====================================================== -->
+
+  <section id="authScreen">
+
+    <div class="auth-wrapper">
+
+      <div class="auth-logo">
+        <div class="logo-box">PD</div>
+        <h1>Plus Data Ghana</h1>
+        <p>Secure Administration Portal</p>
+      </div>
+
+      <div class="auth-card">
+
+        <h2>Admin Login</h2>
+
+        <p class="auth-subtitle">
+          Sign in with your authorized administrator account
+          to access the Plus Data Ghana control panel.
+        </p>
+
+        <div id="authError" class="auth-error"></div>
+
+        <div id="authSuccess" class="auth-success"></div>
+
+        <form id="loginForm">
+
+          <div class="form-group">
+            <label for="email">Admin Email</label>
+
+            <input
+              id="email"
+              class="form-input"
+              type="email"
+              placeholder="admin@example.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+
+            <label for="password">Password</label>
+
+            <div class="input-wrapper">
+
+              <input
+                id="password"
+                class="form-input password-input"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              >
+
+              <button
+                type="button"
+                id="togglePassword"
+                class="password-toggle"
+              >
+                Show
+              </button>
+
+            </div>
+
+          </div>
+
+          <button
+            type="submit"
+            id="loginButton"
+            class="login-button"
+          >
+            Sign In
+          </button>
+
+        </form>
+
+        <div class="auth-footer">
+          Plus Data Ghana • Secure Admin Access
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =====================================================
+       DASHBOARD
+  ====================================================== -->
+
+  <div id="dashboardApp">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-logo">
+        <strong>PLUS DATA</strong>
+        <span>Ghana Admin Panel</span>
+      </div>
+
+      <nav class="nav">
+
+        <div class="nav-section">Main</div>
+
+        <button class="nav-item active">
+          <span class="nav-icon">▦</span>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>Agents</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">⌘</span>
+          <span>API Users</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">🛒</span>
+          <span>Orders</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">📦</span>
+          <span>Packages</span>
+        </button>
+
+        <div class="nav-section">Finance</div>
+
+        <button class="nav-item">
+          <span class="nav-icon">💸</span>
+          <span>Withdrawal</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">💳</span>
+          <span>Wallets & Transactions</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">💰</span>
+          <span>Financial Services</span>
+        </button>
+
+        <div class="nav-section">Management</div>
+
+        <button class="nav-item">
+          <span class="nav-icon">💬</span>
+          <span>SMS</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>Customers</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">🏆</span>
+          <span>Leadership Board</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Reports</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">⚠</span>
+          <span>Disputes</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">🔔</span>
+          <span>Notifications</span>
+        </button>
+
+        <div class="nav-section">System</div>
+
+        <button class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span>System Logs</span>
+        </button>
+
+        <button class="nav-item">
+          <span class="nav-icon">⚙</span>
+          <span>Settings</span>
+        </button>
+
+      </nav>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+      <header class="topbar">
+
+        <div class="welcome">
+          <h2>Welcome back, Admin</h2>
+          <p id="adminEmailDisplay">Loading administrator...</p>
+        </div>
+
+        <div class="top-actions">
+
+          <div class="status">
+            <span class="status-dot"></span>
+            System Online
+          </div>
+
+          <button
+            id="logoutButton"
+            class="logout-btn"
+          >
+            Logout
+          </button>
+
+        </div>
+
+      </header>
+
+      <section class="content">
+
+        <div class="page-title">
+          <h1>Dashboard Overview</h1>
+          <p id="dashboardDate">Loading...</p>
+        </div>
+
+        <!-- KPI -->
+
+        <div class="kpi-grid">
+
+          <div class="kpi">
+            <div class="kpi-label">TOTAL AGENTS</div>
+            <div id="totalAgents" class="kpi-value">0</div>
+            <div class="kpi-change">Live data</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">API USERS</div>
+            <div id="totalApiUsers" class="kpi-value">0</div>
+            <div class="kpi-change">Live data</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">TOTAL ORDERS</div>
+            <div id="totalOrders" class="kpi-value">0</div>
+            <div class="kpi-change">Live data</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">TOTAL REVENUE</div>
+            <div id="totalRevenue" class="kpi-value">GH₵0.00</div>
+            <div class="kpi-change">Live data</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">WITHDRAWALS</div>
+            <div id="totalWithdrawals" class="kpi-value">GH₵0.00</div>
+            <div class="kpi-change">Live data</div>
+          </div>
+
+        </div>
+
+        <!-- CHARTS -->
+
+        <div class="grid-2">
+
+          <div class="card">
+
+            <div class="card-header">
+
+              <div>
+                <div class="card-title">Revenue Overview</div>
+                <div class="card-subtitle">
+                  Platform revenue performance
+                </div>
+              </div>
+
+              <div class="tabs">
+                <button class="tab active">Daily</button>
+                <button class="tab">Weekly</button>
+                <button class="tab">Monthly</button>
+              </div>
+
+            </div>
+
+            <div class="chart-wrap">
+              <canvas id="revenueChart"></canvas>
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="card-header">
+
+              <div>
+                <div class="card-title">Order Status</div>
+                <div class="card-subtitle">
+                  Current order distribution
+                </div>
+              </div>
+
+            </div>
+
+            <div class="chart-wrap small-chart">
+              <canvas id="orderChart"></canvas>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- SECOND ROW -->
+
+        <div class="grid-3">
+
+          <div class="card">
+
+            <div class="card-header">
+              <div>
+                <div class="card-title">Top Selling Packages</div>
+                <div class="card-subtitle">
+                  Based on available order data
+                </div>
+              </div>
+            </div>
+
+            <div id="packagesList">
+              <div class="empty-state">
+                Loading package data...
+              </div>
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="card-header">
+              <div>
+                <div class="card-title">Quick Actions</div>
+                <div class="card-subtitle">
+                  Common administration tasks
+                </div>
+              </div>
+            </div>
+
+            <div class="quick-action">
+              <div class="quick-icon">📦</div>
+              <div>
+                <strong>Create Package</strong>
+                <span>Add a new data bundle</span>
+              </div>
+            </div>
+
+            <div class="quick-action">
+              <div class="quick-icon">👥</div>
+              <div>
+                <strong>Manage Agents</strong>
+                <span>Review agent accounts</span>
+              </div>
+            </div>
+
+            <div class="quick-action">
+              <div class="quick-icon">📊</div>
+              <div>
+                <strong>View Reports</strong>
+                <span>Analyze platform activity</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="card-header">
+              <div>
+                <div class="card-title">System Health</div>
+                <div class="card-subtitle">
+                  Platform services
+                </div>
+              </div>
+            </div>
+
+            <div class="health-row">
+
+              <div class="health-top">
+                <span>Supabase Database</span>
+                <span>Online</span>
+              </div>
+
+              <div class="health-bar">
+                <div
+                  class="health-progress"
+                  style="width: 98%"
+                ></div>
+              </div>
+
+            </div>
+
+            <div class="health-row">
+
+              <div class="health-top">
+                <span>Authentication</span>
+                <span>Online</span>
+              </div>
+
+              <div class="health-bar">
+                <div
+                  class="health-progress"
+                  style="width: 100%"
+                ></div>
+              </div>
+
+            </div>
+
+            <div class="health-row">
+
+              <div class="health-top">
+                <span>API</span>
+                <span>Online</span>
+              </div>
+
+              <div class="health-bar">
+                <div
+                  class="health-progress"
+                  style="width: 96%"
+                ></div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RECENT ORDERS -->
+
+        <div class="card" style="margin-bottom:18px;">
+
+          <div class="card-header">
+
+            <div>
+              <div class="card-title">Recent Orders</div>
+              <div class="card-subtitle">
+                Latest customer transactions
+              </div>
+            </div>
+
+          </div>
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ORDER ID</th>
+                  <th>CUSTOMER PHONE</th>
+                  <th>AMOUNT</th>
+                  <th>STATUS</th>
+                  <th>DATE</th>
+                </tr>
+              </thead>
+
+              <tbody id="ordersTableBody">
+
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state">
+                      Loading orders...
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+        <!-- WITHDRAWALS -->
+
+        <div class="card">
+
+          <div class="card-header">
+
+            <div>
+              <div class="card-title">Withdrawal Requests</div>
+              <div class="card-subtitle">
+                Latest withdrawal activity
+              </div>
+            </div>
+
+          </div>
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>REQUEST</th>
+                  <th>AMOUNT</th>
+                  <th>STATUS</th>
+                  <th>DATE</th>
+                </tr>
+              </thead>
+
+              <tbody id="withdrawalsTableBody">
+
+                <tr>
+                  <td colspan="4">
+                    <div class="empty-state">
+                      No withdrawal data available.
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SUPABASE CONFIGURATION
+    ====================================================== */
+
+    const SUPABASE_URL =
+      "https://plbtnltcocsuekifddat.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_gwgxy9az6GagMy-0K_HoMw_FVcsVSVW";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+
+    /* =====================================================
+       DOM ELEMENTS
+    ====================================================== */
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const authScreen =
+      document.getElementById("authScreen");
+
+    const dashboardApp =
+      document.getElementById("dashboardApp");
+
+    const loginForm =
+      document.getElementById("loginForm");
+
+    const loginButton =
+      document.getElementById("loginButton");
+
+    const emailInput =
+      document.getElementById("email");
+
+    const passwordInput =
+      document.getElementById("password");
+
+    const togglePassword =
+      document.getElementById("togglePassword");
+
+    const authError =
+      document.getElementById("authError");
+
+    const authSuccess =
+      document.getElementById("authSuccess");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+
+    /* =====================================================
+       AUTH MESSAGE HELPERS
+    ====================================================== */
+
+    function showError(message) {
+
+      authSuccess.style.display = "none";
+
+      authError.textContent = message;
+
+      authError.style.display = "block";
+    }
+
+
+    function showSuccess(message) {
+
+      authError.style.display = "none";
+
+      authSuccess.textContent = message;
+
+      authSuccess.style.display = "block";
+    }
+
+
+    function clearMessages() {
+
+      authError.style.display = "none";
+
+      authSuccess.style.display = "none";
+    }
+
+
+    /* =====================================================
+       PASSWORD VISIBILITY
+    ====================================================== */
+
+    togglePassword.addEventListener(
+      "click",
+      () => {
+
+        const isPassword =
+          passwordInput.type === "password";
+
+        passwordInput.type =
+          isPassword ? "text" : "password";
+
+        togglePassword.textContent =
+          isPassword ? "Hide" : "Show";
+
+      }
+    );
+
+
+    /* =====================================================
+       SHOW AUTH SCREEN
+    ====================================================== */
+
+    function showLogin() {
+
+      loadingScreen.style.display = "none";
+
+      dashboardApp.style.display = "none";
+
+      authScreen.style.display = "flex";
+    }
+
+
+    /* =====================================================
+       SHOW DASHBOARD
+    ====================================================== */
+
+    function showDashboard() {
+
+      loadingScreen.style.display = "none";
+
+      authScreen.style.display = "none";
+
+      dashboardApp.style.display = "block";
+    }
+
+
+    /* =====================================================
+       CHECK ADMIN ROLE
+    ====================================================== */
+
+    async function checkAdminRole(userId) {
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from("profiles")
+        .select("id, full_name, role")
+        .eq("id", userId)
+        .single();
+
+      if (error) {
+
+        console.error(
+          "Profile lookup error:",
+          error
+        );
+
+        return {
+          allowed: false,
+          error: "Unable to verify administrator profile."
+        };
+      }
+
+      if (!data) {
+
+        return {
+          allowed: false,
+          error: "No administrator profile was found."
+        };
+      }
+
+      if (data.role !== "admin") {
+
+        return {
+          allowed: false,
+          error:
+            "Access denied. This account is not an administrator."
+        };
+      }
+
+      return {
+        allowed: true,
+        profile: data
+      };
+    }
+
+
+    /* =====================================================
+       INITIAL AUTH CHECK
+    ====================================================== */
+
+    async function initializeAuth() {
+
+      try {
+
+        const {
+          data: {
+            user
+          },
+          error
+        } = await supabaseClient.auth.getUser();
+
+        if (error || !user) {
+
+          showLogin();
+
+          return;
+        }
+
+        const adminCheck =
+          await checkAdminRole(user.id);
+
+        if (!adminCheck.allowed) {
+
+          await supabaseClient.auth.signOut();
+
+          showLogin();
+
+          showError(adminCheck.error);
+
+          return;
+        }
+
+        await enterDashboard(
+          user,
+          adminCheck.profile
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Authentication initialization error:",
+          error
+        );
+
+        showLogin();
+
+        showError(
+          "Unable to initialize authentication. Please try again."
+        );
+
+      }
+    }
+
+
+    /* =====================================================
+       LOGIN
+    ====================================================== */
+
+    loginForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+        clearMessages();
+
+        const email =
+          emailInput.value.trim();
+
+        const password =
+          passwordInput.value;
+
+        if (!email || !password) {
+
+          showError(
+            "Please enter your email and password."
+          );
+
+          return;
+        }
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+          "Signing in...";
+
+        try {
+
+          const {
+            data,
+            error
+          } = await supabaseClient.auth
+            .signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) {
+
+            console.error(
+              "Supabase login error:",
+              error
+            );
+
+            showError(
+              "Login failed. Please check your email and password."
+            );
+
+            return;
+          }
+
+          if (!data.user) {
+
+            showError(
+              "Login succeeded but no user session was returned."
+            );
+
+            return;
+          }
+
+          showSuccess(
+            "Authentication successful. Checking admin access..."
+          );
+
+          const adminCheck =
+            await checkAdminRole(
+              data.user.id
+            );
+
+          if (!adminCheck.allowed) {
+
+            await supabaseClient.auth.signOut();
+
+            showError(
+              adminCheck.error
+            );
+
+            return;
+          }
+
+          await enterDashboard(
+            data.user,
+            adminCheck.profile
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Login exception:",
+            error
+          );
+
+          showError(
+            "An unexpected error occurred during login."
+          );
+
+        } finally {
+
+          loginButton.disabled = false;
+
+          loginButton.textContent =
+            "Sign In";
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       ENTER DASHBOARD
+    ====================================================== */
+
+    async function enterDashboard(
+      user,
+      profile
+    ) {
+
+      showDashboard();
+
+      document.getElementById(
+        "adminEmailDisplay"
+      ).textContent =
+        user.email || "Administrator";
+
+      document.getElementById(
+        "dashboardDate"
+      ).textContent =
+        new Date().toLocaleString(
+          "en-GH",
+          {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          }
+        );
+
+      await loadDashboardData();
+    }
+
+
+    /* =====================================================
+       LOAD DASHBOARD DATA
+    ====================================================== */
+
+    async function loadDashboardData() {
+
+      try {
+
+        const {
+          data,
+          error
+        } = await supabaseClient.rpc(
+          "admin_dashboard"
+        );
+
+        if (error) {
+
+          console.error(
+            "Dashboard RPC error:",
+            error
+          );
+
+          /*
+            Authentication is working if we reached here.
+
+            If you see:
+            "permission denied for function admin_dashboard"
+
+            the database function still needs:
+            GRANT EXECUTE ON FUNCTION
+            public.admin_dashboard()
+            TO authenticated;
+          */
+
+          return;
+        }
+
+        console.log(
+          "Admin dashboard data:",
+          data
+        );
+
+        processDashboardData(data);
+
+      } catch (error) {
+
+        console.error(
+          "Dashboard loading error:",
+          error
+        );
+
+      }
+    }
+
+
+    /* =====================================================
+       PROCESS DASHBOARD DATA
+    ====================================================== */
+
+    function processDashboardData(data) {
+
+      if (!data) {
+        return;
+      }
+
+      /*
+        The dashboard function may return a JSON object.
+
+        This section safely handles common structures
+        without breaking the page if some values are missing.
+      */
+
+      const dashboard =
+        Array.isArray(data)
+          ? data[0] || {}
+          : data || {};
+
+      const totalAgents =
+        dashboard.total_agents ??
+        dashboard.agents_count ??
+        0;
+
+      const totalApiUsers =
+        dashboard.total_api_users ??
+        dashboard.api_users_count ??
+        0;
+
+      const totalOrders =
+        dashboard.total_orders ??
+        dashboard.orders_count ??
+        0;
+
+      const totalRevenue =
+        dashboard.total_revenue ??
+        dashboard.revenue ??
+        0;
+
+      const totalWithdrawals =
+        dashboard.total_withdrawals ??
+        dashboard.withdrawals ??
+        0;
+
+
+      document.getElementById(
+        "totalAgents"
+      ).textContent =
+        formatNumber(totalAgents);
+
+
+      document.getElementById(
+        "totalApiUsers"
+      ).textContent =
+        formatNumber(totalApiUsers);
+
+
+      document.getElementById(
+        "totalOrders"
+      ).textContent =
+        formatNumber(totalOrders);
+
+
+      document.getElementById(
+        "totalRevenue"
+      ).textContent =
+        formatCurrency(totalRevenue);
+
+
+      document.getElementById(
+        "totalWithdrawals"
+      ).textContent =
+        formatCurrency(totalWithdrawals);
+
+
+      /*
+        If your RPC later returns detailed arrays,
+        they can be connected here without changing
+        the authentication system.
+      */
+
+      if (dashboard.recent_orders) {
+
+        renderOrders(
+          dashboard.recent_orders
+        );
+
+      }
+
+      if (dashboard.recent_withdrawals) {
+
+        renderWithdrawals(
+          dashboard.recent_withdrawals
+        );
+
+      }
+
+      if (dashboard.top_packages) {
+
+        renderPackages(
+          dashboard.top_packages
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       ORDERS
+    ====================================================== */
+
+    function renderOrders(orders) {
+
+      const body =
+        document.getElementById(
+          "ordersTableBody"
+        );
+
+      if (
+        !orders ||
+        !Array.isArray(orders) ||
+        orders.length === 0
+      ) {
+
+        body.innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                No orders available.
+              </div>
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+      body.innerHTML =
+        orders
+          .slice(0, 10)
+          .map(order => {
+
+            const status =
+              String(
+                order.status || "pending"
+              ).toLowerCase();
+
+            let badgeClass = "amber";
+
+            if (
+              status === "completed" ||
+              status === "paid"
+            ) {
+              badgeClass = "green";
+            }
+
+            if (
+              status === "failed" ||
+              status === "cancelled"
+            ) {
+              badgeClass = "red";
+            }
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHtml(
+                    order.id || "—"
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHtml(
+                    order.customer_phone || "—"
+                  )}
+                </td>
+
+                <td>
+                  ${formatCurrency(
+                    order.amount || 0
+                  )}
+                </td>
+
+                <td>
+                  <span class="badge ${badgeClass}">
+                    ${escapeHtml(status)}
+                  </span>
+                </td>
+
+                <td>
+                  ${formatDate(
+                    order.created_at
+                  )}
+                </td>
+
+              </tr>
+            `;
+
+          })
+          .join("");
+    }
+
+
+    /* =====================================================
+       WITHDRAWALS
+    ====================================================== */
+
+    function renderWithdrawals(
+      withdrawals
+    ) {
+
+      const body =
+        document.getElementById(
+          "withdrawalsTableBody"
+        );
+
+      if (
+        !withdrawals ||
+        !Array.isArray(withdrawals) ||
+        withdrawals.length === 0
+      ) {
+
+        body.innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                No withdrawal requests available.
+              </div>
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+      body.innerHTML =
+        withdrawals
+          .slice(0, 10)
+          .map(item => {
+
+            const status =
+              String(
+                item.status || "pending"
+              ).toLowerCase();
+
+            let badgeClass = "amber";
+
+            if (status === "completed") {
+              badgeClass = "green";
+            }
+
+            if (
+              status === "failed" ||
+              status === "rejected"
+            ) {
+              badgeClass = "red";
+            }
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHtml(
+                    item.id || "—"
+                  )}
+                </td>
+
+                <td>
+                  ${formatCurrency(
+                    item.amount || 0
+                  )}
+                </td>
+
+                <td>
+                  <span class="badge ${badgeClass}">
+                    ${escapeHtml(status)}
+                  </span>
+                </td>
+
+                <td>
+                  ${formatDate(
+                    item.created_at
+                  )}
+                </td>
+
+              </tr>
+            `;
+
+          })
+          .join("");
+    }
+
+
+    /* =====================================================
+       PACKAGES
+    ====================================================== */
+
+    function renderPackages(packages) {
+
+      const container =
+        document.getElementById(
+          "packagesList"
+        );
+
+      if (
+        !packages ||
+        !Array.isArray(packages) ||
+        packages.length === 0
+      ) {
+
+        container.innerHTML = `
+          <div class="empty-state">
+            No package sales data available.
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML =
+        packages
+          .slice(0, 5)
+          .map((item, index) => {
+
+            return `
+              <div
+                style="
+                  display:flex;
+                  justify-content:space-between;
+                  align-items:center;
+                  padding:12px 0;
+                  border-bottom:1px solid rgba(28,42,90,.6);
+                "
+              >
+
+                <div>
+                  <strong style="font-size:11px;">
+                    ${escapeHtml(
+                      item.package_name ||
+                      item.name ||
+                      `Package ${index + 1}`
+                    )}
+                  </strong>
+
+                  <div
+                    style="
+                      color:var(--mute);
+                      font-size:9px;
+                      margin-top:4px;
+                    "
+                  >
+                    ${escapeHtml(
+                      String(
+                        item.sales ??
+                        item.orders ??
+                        0
+                      )
+                    )} sales
+                  </div>
+                </div>
+
+                <strong style="font-size:11px;">
+                  ${formatCurrency(
+                    item.revenue || 0
+                  )}
+                </strong>
+
+              </div>
+            `;
+
+          })
+          .join("");
+    }
+
+
+    /* =====================================================
+       LOGOUT
+    ====================================================== */
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        logoutButton.disabled = true;
+
+        logoutButton.textContent =
+          "Logging out...";
+
+        try {
+
+          const {
+            error
+          } = await supabaseClient.auth.signOut();
+
+          if (error) {
+
+            console.error(
+              "Logout error:",
+              error
+            );
+
+            logoutButton.disabled = false;
+
+            logoutButton.textContent =
+              "Logout";
+
+            return;
+          }
+
+          emailInput.value = "";
+          passwordInput.value = "";
+
+          clearMessages();
+
+          showLogin();
+
+        } catch (error) {
+
+          console.error(
+            "Logout exception:",
+            error
+          );
+
+          logoutButton.disabled = false;
+
+          logoutButton.textContent =
+            "Logout";
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       AUTH STATE LISTENER
+    ====================================================== */
+
+    supabaseClient.auth.onAuthStateChange(
+      async (event, session) => {
+
+        console.log(
+          "Auth event:",
+          event
+        );
+
+        if (
+          event === "SIGNED_OUT" ||
+          !session
+        ) {
+
+          showLogin();
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       NAVIGATION
+    ====================================================== */
+
+    document
+      .querySelectorAll(".nav-item")
+      .forEach(item => {
+
+        item.addEventListener(
+          "click",
+          () => {
+
+            document
+              .querySelectorAll(".nav-item")
+              .forEach(nav => {
+                nav.classList.remove(
+                  "active"
+                );
+              });
+
+            item.classList.add(
+              "active"
+            );
+
+          }
+        );
+
+      });
+
+
+    /* =====================================================
+       NUMBER FORMATTING
+    ====================================================== */
+
+    function formatNumber(value) {
+
+      const number =
+        Number(value) || 0;
+
+      return number.toLocaleString(
+        "en-GH"
+      );
+    }
+
+
+    function formatCurrency(value) {
+
+      const number =
+        Number(value) || 0;
+
+      return (
+        "GH₵" +
+        number.toLocaleString(
+          "en-GH",
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }
+        )
+      );
+    }
+
+
+    function formatDate(value) {
+
+      if (!value) {
+        return "—";
+      }
+
+      const date =
+        new Date(value);
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return "—";
+      }
+
+      return date.toLocaleString(
+        "en-GH",
+        {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }
+      );
+    }
+
+
+    /* =====================================================
+       HTML ESCAPING
+    ====================================================== */
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    /* =====================================================
+       START AUTH
+    ====================================================== */
+
+    initializeAuth();
+
+  </script>
+
+</body>
+</html>

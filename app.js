@@ -2,12 +2,20 @@
 // PLUS DATA GHANA — MAIN FRONTEND JAVASCRIPT
 // ================================================================
 
-// ----------------------------------------------------------------
-// Light/dark theme toggle
-// ----------------------------------------------------------------
+// ================================================================
+// LIGHT / DARK THEME TOGGLE
+// ================================================================
 
-const SUN_PATH = '<circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
-const MOON_PATH = '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>';
+const SUN_PATH =
+  '<circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/>' +
+  '<path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
+
+const MOON_PATH =
+  '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>';
+
+// ================================================================
+// HERO VIDEO — RESPECT REDUCED MOTION
+// ================================================================
 
 const heroVideo = document.querySelector('.hero-video video');
 
@@ -18,6 +26,10 @@ if (
   heroVideo.pause();
   heroVideo.removeAttribute('autoplay');
 }
+
+// ================================================================
+// THEME
+// ================================================================
 
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
@@ -50,9 +62,9 @@ if (themeToggle) {
   });
 }
 
-// ----------------------------------------------------------------
-// Mobile menu toggle
-// ----------------------------------------------------------------
+// ================================================================
+// MOBILE MENU
+// ================================================================
 
 const menuToggle = document.getElementById('menuToggle');
 const nav = document.querySelector('nav.primary');
@@ -64,13 +76,21 @@ if (menuToggle && nav) {
     nav.style.display = isOpen ? 'none' : 'flex';
 
     nav.style.cssText +=
-      'flex-direction:column; position:absolute; top:100%; left:0; right:0; background:var(--paper-raised); padding:20px 24px; border-bottom:1px solid var(--line); gap:16px;';
+      'flex-direction:column;' +
+      'position:absolute;' +
+      'top:100%;' +
+      'left:0;' +
+      'right:0;' +
+      'background:var(--paper-raised);' +
+      'padding:20px 24px;' +
+      'border-bottom:1px solid var(--line);' +
+      'gap:16px;';
   });
 }
 
-// ----------------------------------------------------------------
-// Network colours
-// ----------------------------------------------------------------
+// ================================================================
+// NETWORK COLOURS
+// ================================================================
 
 const netColors = {
   mtn: 'var(--mtn)',
@@ -78,9 +98,9 @@ const netColors = {
   at: 'var(--at)'
 };
 
-// ----------------------------------------------------------------
-// Ticker — random Ghana deliveries
-// ----------------------------------------------------------------
+// ================================================================
+// PURCHASE TICKER
+// ================================================================
 
 const GH_NETS = [
   {
@@ -123,29 +143,39 @@ function randInt(min, max) {
 function maskedMomo(prefixes) {
   const pre = prefixes[randInt(0, prefixes.length - 1)];
 
-  return pre + '****' + String(randInt(100, 999));
+  return (
+    pre +
+    '****' +
+    String(randInt(100, 999))
+  );
 }
 
 function minsLabel(n) {
   return n === 1 ? '1 min' : n + ' mins';
 }
 
-const tickerItems = Array.from({ length: 14 }, () => {
-  const net = GH_NETS[randInt(0, GH_NETS.length - 1)];
-  const size = GH_SIZES[randInt(0, GH_SIZES.length - 1)];
+const tickerItems = Array.from(
+  { length: 14 },
+  () => {
+    const net =
+      GH_NETS[randInt(0, GH_NETS.length - 1)];
 
-  return {
-    net: net.key,
-    text:
-      size +
-      'GB ' +
-      net.name +
-      ' sent to ' +
-      maskedMomo(net.prefixes) +
-      ' ' +
-      minsLabel(randInt(1, 18))
-  };
-});
+    const size =
+      GH_SIZES[randInt(0, GH_SIZES.length - 1)];
+
+    return {
+      net: net.key,
+      text:
+        size +
+        'GB ' +
+        net.name +
+        ' sent to ' +
+        maskedMomo(net.prefixes) +
+        ' ' +
+        minsLabel(randInt(1, 18))
+    };
+  }
+);
 
 const track = document.getElementById('tickerTrack');
 
@@ -153,7 +183,8 @@ if (track) {
   const itemsHTML = tickerItems
     .map(
       (t) =>
-        '<div class="ticker-item"><span class="net-dot" style="background:' +
+        '<div class="ticker-item">' +
+        '<span class="net-dot" style="background:' +
         netColors[t.net] +
         '"></span>' +
         t.text +
@@ -164,9 +195,9 @@ if (track) {
   track.innerHTML = itemsHTML + itemsHTML;
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 // SUPABASE CONNECTION
-// ----------------------------------------------------------------
+// ================================================================
 
 const SUPABASE_URL =
   'https://plbtnltcocsuekifddat.supabase.co';
@@ -190,12 +221,9 @@ if (
   );
 }
 
-// ----------------------------------------------------------------
-// Buy Data modal
-// ----------------------------------------------------------------
-// Package prices are NO LONGER hard-coded here.
-// They are loaded from public.data_packages in Supabase.
-// ----------------------------------------------------------------
+// ================================================================
+// BUY DATA MODAL
+// ================================================================
 
 const BUY_BUNDLES = {
   mtn: {
@@ -217,16 +245,14 @@ const BUY_BUNDLES = {
   }
 };
 
-// ----------------------------------------------------------------
-// Supabase network mapping
-// ----------------------------------------------------------------
+// ================================================================
+// SUPABASE NETWORK MAPPING
+// ================================================================
 
 const NETWORK_KEY = {
   MTN: 'mtn',
-
   TELECEL: 'telecel',
   'TELECEL GHANA': 'telecel',
-
   AIRTELTIGO: 'at',
   'AIRTEL TIGO': 'at',
   'AIRTEL-TIGO': 'at'
@@ -235,9 +261,9 @@ const NETWORK_KEY = {
 let packagesLoaded = false;
 let packagesLoading = false;
 
-// ----------------------------------------------------------------
-// Load packages from Supabase
-// ----------------------------------------------------------------
+// ================================================================
+// LOAD PACKAGES FROM SUPABASE
+// ================================================================
 
 async function loadPackagesFromSupabase() {
   if (packagesLoaded) {
@@ -281,21 +307,18 @@ async function loadPackagesFromSupabase() {
       return false;
     }
 
-    // Clear the existing frontend arrays.
     BUY_BUNDLES.mtn.plans = [];
     BUY_BUNDLES.telecel.plans = [];
     BUY_BUNDLES.at.plans = [];
 
-    // Convert Supabase rows into the format
-    // already expected by the existing UI.
     for (const row of data || []) {
-      const networkName = String(
-        row.network || ''
-      )
-        .trim()
-        .toUpperCase();
+      const networkName =
+        String(row.network || '')
+          .trim()
+          .toUpperCase();
 
-      const networkKey = NETWORK_KEY[networkName];
+      const networkKey =
+        NETWORK_KEY[networkName];
 
       if (!networkKey) {
         console.warn(
@@ -322,18 +345,16 @@ async function loadPackagesFromSupabase() {
 
       BUY_BUNDLES[networkKey].plans.push({
         id: row.id,
-
         packageId: row.id,
 
-        packageName: String(
-          row.package_name || ''
-        ).trim(),
+        packageName:
+          String(row.package_name || '').trim(),
 
-        size: String(
-          row.data_amount || ''
-        ).trim(),
+        size:
+          String(row.data_amount || '').trim(),
 
-        price: numericPrice.toFixed(2)
+        price:
+          numericPrice.toFixed(2)
       });
     }
 
@@ -344,7 +365,6 @@ async function loadPackagesFromSupabase() {
       BUY_BUNDLES
     );
 
-    // Refresh the package selector if it is currently open.
     if (
       buyModal &&
       buyModal.classList.contains('open')
@@ -353,7 +373,6 @@ async function loadPackagesFromSupabase() {
     }
 
     return true;
-
   } catch (error) {
     console.error(
       'Plus Data: Unexpected package loading error:',
@@ -361,29 +380,37 @@ async function loadPackagesFromSupabase() {
     );
 
     return false;
-
   } finally {
     packagesLoading = false;
   }
 }
 
-// ----------------------------------------------------------------
-// Buy Data DOM elements
-// ----------------------------------------------------------------
+// ================================================================
+// BUY DATA DOM
+// ================================================================
 
-const buyModal = document.getElementById('buyModal');
-const buyCloseBtn = document.getElementById('buyCloseBtn');
-const buyNetTabs = document.getElementById('buyNetTabs');
-const buyBundleGrid = document.getElementById('buyBundleGrid');
+const buyModal =
+  document.getElementById('buyModal');
+
+const buyCloseBtn =
+  document.getElementById('buyCloseBtn');
+
+const buyNetTabs =
+  document.getElementById('buyNetTabs');
+
+const buyBundleGrid =
+  document.getElementById('buyBundleGrid');
 
 let activeNet = 'mtn';
 
-// ----------------------------------------------------------------
-// Render Buy Data packages
-// ----------------------------------------------------------------
+// ================================================================
+// RENDER BUY BUNDLES
+// ================================================================
 
 function renderBuyBundles(net) {
-  if (!buyBundleGrid) return;
+  if (!buyBundleGrid) {
+    return;
+  }
 
   const data = BUY_BUNDLES[net];
 
@@ -402,92 +429,89 @@ function renderBuyBundles(net) {
   if (!data.plans.length) {
     buyBundleGrid.innerHTML = `
       <div class="buy-bundle-empty">
-        <p>
-          No active packages are available for this network right now.
-        </p>
+        <p>No active packages are available for this network right now.</p>
       </div>
     `;
 
     return;
   }
 
-  buyBundleGrid.innerHTML = data.plans
-    .map(
-      (p, i) => `
-        <div
-          class="buy-bundle-card"
-          data-net="${net}"
-          data-index="${i}"
-        >
-          <div class="top-row">
+  buyBundleGrid.innerHTML =
+    data.plans
+      .map(
+        (p, i) => `
+          <div
+            class="buy-bundle-card"
+            data-net="${net}"
+            data-index="${i}"
+          >
+            <div class="top-row">
+              <span class="buy-bundle-pill">
+                ${data.label}
+              </span>
 
-            <span class="buy-bundle-pill">
-              ${data.label}
-            </span>
-
-            <span class="buy-bundle-chev">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M6 9l6 6 6-6"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
-
-          </div>
-
-          <div class="buy-bundle-size">
-            ${p.size}
-          </div>
-
-          <div class="buy-bundle-label">
-            ${data.label} Bundle
-          </div>
-
-          <div class="buy-bundle-divider"></div>
-
-          <div class="buy-bundle-bottom">
-
-            <div class="buy-bundle-price">
-              GH₵${p.price}
+              <span class="buy-bundle-chev">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
             </div>
 
-            ${
-              data.tagStyle === 'single'
-                ? `
-                  <div class="buy-bundle-tag">
-                    Non-expiry
-                  </div>
-                `
-                : `
-                  <div class="buy-bundle-stats">
-                    <small>Rollover: Yes</small>
-                    <small>Duration: Non-expiry</small>
-                  </div>
-                `
-            }
+            <div class="buy-bundle-size">
+              ${p.size}
+            </div>
 
+            <div class="buy-bundle-label">
+              ${data.label} Bundle
+            </div>
+
+            <div class="buy-bundle-divider"></div>
+
+            <div class="buy-bundle-bottom">
+              <div class="buy-bundle-price">
+                GH₵${p.price}
+              </div>
+
+              ${
+                data.tagStyle === 'single'
+                  ? `
+                    <div class="buy-bundle-tag">
+                      Non-expiry
+                    </div>
+                  `
+                  : `
+                    <div class="buy-bundle-stats">
+                      <small>Rollover: Yes</small>
+                      <small>Duration: Non-expiry</small>
+                    </div>
+                  `
+              }
+            </div>
           </div>
-        </div>
-      `
-    )
-    .join('');
+        `
+      )
+      .join('');
 }
 
-// ----------------------------------------------------------------
-// Select package card
-// ----------------------------------------------------------------
+// ================================================================
+// SELECT BUY CARD
+// ================================================================
 
 function selectBuyCard(net, index) {
-  if (!buyBundleGrid) return;
+  if (!buyBundleGrid) {
+    return;
+  }
 
   buyBundleGrid
     .querySelectorAll('.buy-bundle-card')
@@ -495,72 +519,76 @@ function selectBuyCard(net, index) {
       card.classList.remove('selected');
     });
 
-  const card = buyBundleGrid.querySelector(
-    `.buy-bundle-card[data-net="${net}"][data-index="${index}"]`
-  );
+  const card =
+    buyBundleGrid.querySelector(
+      `.buy-bundle-card[data-net="${net}"][data-index="${index}"]`
+    );
 
   if (card) {
     card.classList.add('selected');
   }
 }
 
-// ----------------------------------------------------------------
-// Buy Data package click
-// ----------------------------------------------------------------
+// ================================================================
+// BUY BUNDLE CLICK
+// ================================================================
 
 if (buyBundleGrid) {
-  buyBundleGrid.addEventListener('click', (e) => {
-    const card = e.target.closest(
-      '.buy-bundle-card'
-    );
+  buyBundleGrid.addEventListener(
+    'click',
+    (e) => {
+      const card =
+        e.target.closest('.buy-bundle-card');
 
-    if (!card) return;
+      if (!card) {
+        return;
+      }
 
-    const net = card.dataset.net;
-    const index = Number(
-      card.dataset.index
-    );
+      const net = card.dataset.net;
+      const index = Number(card.dataset.index);
 
-    selectBuyCard(net, index);
+      selectBuyCard(net, index);
 
-    openCheckoutModal(
-      net,
-      index
-    );
-  });
+      openCheckoutModal(net, index);
+    }
+  );
 }
 
-// ----------------------------------------------------------------
-// Network tab click
-// ----------------------------------------------------------------
+// ================================================================
+// NETWORK TABS
+// ================================================================
 
 if (buyNetTabs) {
-  buyNetTabs.addEventListener('click', (e) => {
-    const tab = e.target.closest(
-      '.buy-net-tab'
-    );
+  buyNetTabs.addEventListener(
+    'click',
+    (e) => {
+      const tab =
+        e.target.closest('.buy-net-tab');
 
-    if (!tab) return;
+      if (!tab) {
+        return;
+      }
 
-    document
-      .querySelectorAll('.buy-net-tab')
-      .forEach((t) => {
-        t.classList.remove('active');
-      });
+      document
+        .querySelectorAll('.buy-net-tab')
+        .forEach((t) => {
+          t.classList.remove('active');
+        });
 
-    tab.classList.add('active');
+      tab.classList.add('active');
 
-    activeNet = tab.dataset.net;
+      activeNet = tab.dataset.net;
 
-    if (packagesLoaded) {
-      renderBuyBundles(activeNet);
+      if (packagesLoaded) {
+        renderBuyBundles(activeNet);
+      }
     }
-  });
+  );
 }
 
-// ----------------------------------------------------------------
-// Open Buy Data modal
-// ----------------------------------------------------------------
+// ================================================================
+// OPEN BUY MODAL
+// ================================================================
 
 function openBuyModal(net) {
   if (
@@ -582,8 +610,7 @@ function openBuyModal(net) {
   if (buyModal) {
     buyModal.classList.add('open');
 
-    document.body.style.overflow =
-      'hidden';
+    document.body.style.overflow = 'hidden';
   }
 
   if (packagesLoaded) {
@@ -600,18 +627,18 @@ function openBuyModal(net) {
     `;
   }
 
-  loadPackagesFromSupabase()
-    .then((success) => {
+  loadPackagesFromSupabase().then(
+    (success) => {
       if (success) {
-        renderBuyBundles(
-          activeNet
-        );
-      } else if (buyBundleGrid) {
+        renderBuyBundles(activeNet);
+
+        return;
+      }
+
+      if (buyBundleGrid) {
         buyBundleGrid.innerHTML = `
           <div class="buy-bundle-error">
-            <p>
-              We couldn't load the packages right now.
-            </p>
+            <p>We couldn't load the packages right now.</p>
 
             <button
               type="button"
@@ -633,33 +660,30 @@ function openBuyModal(net) {
             () => {
               packagesLoaded = false;
 
-              openBuyModal(
-                activeNet
-              );
+              openBuyModal(activeNet);
             }
           );
         }
       }
-    });
+    }
+  );
 }
 
-// ----------------------------------------------------------------
-// Close Buy Data modal
-// ----------------------------------------------------------------
+// ================================================================
+// CLOSE BUY MODAL
+// ================================================================
 
 function closeBuyModal() {
   if (buyModal) {
-    buyModal.classList.remove(
-      'open'
-    );
+    buyModal.classList.remove('open');
   }
 
   document.body.style.overflow = '';
 }
 
-// ----------------------------------------------------------------
-// Buy Data triggers
-// ----------------------------------------------------------------
+// ================================================================
+// BUY TRIGGERS
+// ================================================================
 
 document
   .querySelectorAll('.buy-trigger')
@@ -683,10 +707,12 @@ if (buyCloseBtn) {
   );
 }
 
+// ================================================================
+// BUY TRACK LINK
+// ================================================================
+
 const buyTrackLink =
-  document.getElementById(
-    'buyTrackLink'
-  );
+  document.getElementById('buyTrackLink');
 
 if (buyTrackLink) {
   buyTrackLink.addEventListener(
@@ -697,14 +723,10 @@ if (buyTrackLink) {
       closeBuyModal();
 
       const top =
-        document.getElementById(
-          'top'
-        );
+        document.getElementById('top');
 
       const footerTrack =
-        document.querySelector(
-          'footer#track'
-        );
+        document.querySelector('footer#track');
 
       if (top) {
         top.scrollIntoView();
@@ -721,9 +743,9 @@ if (buyTrackLink) {
   );
 }
 
-// ----------------------------------------------------------------
-// Dynamic network checkout modal
-// ----------------------------------------------------------------
+// ================================================================
+// DYNAMIC NETWORK CHECKOUT
+// ================================================================
 
 const NETWORK_UI = {
   mtn: {
@@ -760,41 +782,26 @@ const NETWORK_UI = {
   }
 };
 
-// ----------------------------------------------------------------
-// Ghana mobile number validation
-// ----------------------------------------------------------------
+// ================================================================
+// NETWORK PHONE VALIDATION
+// ================================================================
 
 const STRICT_NETWORK_PREFIX = true;
 
-// ----------------------------------------------------------------
-// Transaction/service fee
-// ----------------------------------------------------------------
-
-const FEE_RATE = 0.03;
-
-function computeFee(price) {
-  return Math.round(
-    price * FEE_RATE * 100
-  ) / 100;
-}
-
-// ----------------------------------------------------------------
-// Demo promo codes
-// ----------------------------------------------------------------
-
-const PROMO_CODES = {
-  SAVE5: 0.05,
-  PLUS10: 0.10
-};
+// ================================================================
+// CHECKOUT HELPERS
+// ================================================================
 
 function formatGHS(n) {
-  return 'GH₵' +
-    Number(n).toFixed(2);
+  return (
+    'GH₵' +
+    Number(n).toFixed(2)
+  );
 }
 
-// ----------------------------------------------------------------
-// Checkout DOM elements
-// ----------------------------------------------------------------
+// ================================================================
+// CHECKOUT DOM
+// ================================================================
 
 const checkoutModal =
   document.getElementById(
@@ -829,6 +836,11 @@ const checkoutFee =
 const checkoutPhone =
   document.getElementById(
     'checkoutPhone'
+  );
+
+const checkoutEmail =
+  document.getElementById(
+    'checkoutEmail'
   );
 
 const checkoutPhoneError =
@@ -876,29 +888,26 @@ const checkoutPayLabel =
     'checkoutPayLabel'
   );
 
-// ----------------------------------------------------------------
-// Checkout state
-// ----------------------------------------------------------------
-
 let checkoutState = null;
 
-/*
-  checkoutState structure:
-
-  {
-    net,
-    size,
-    price,
-    packageId,
-    packageName
-  }
-*/
-
-let appliedPromo = null;
-
-// ----------------------------------------------------------------
-// Calculate checkout total
-// ----------------------------------------------------------------
+// ================================================================
+// CHECKOUT TOTAL
+// ================================================================
+//
+// IMPORTANT:
+//
+// Plus Data does NOT add a processing fee.
+//
+// The package price is the amount sent to Paystack.
+// Your approved Paystack customer fee is handled by Paystack.
+//
+// Example:
+//
+// Package = GH₵10.00
+// Plus Data amount = GH₵10.00
+// Paystack handles its approved customer fee.
+//
+// ================================================================
 
 function currentTotal() {
   if (!checkoutState) {
@@ -909,73 +918,34 @@ function currentTotal() {
     };
   }
 
-  const fee =
-    computeFee(
-      checkoutState.price
-    );
-
-  let total =
-    Math.round(
-      (
-        checkoutState.price +
-        fee
-      ) * 100
-    ) / 100;
-
-  let discountAmt = 0;
-
-  if (appliedPromo) {
-    discountAmt =
-      Math.round(
-        total *
-        appliedPromo.discount *
-        100
-      ) / 100;
-
-    total =
-      Math.round(
-        (
-          total -
-          discountAmt
-        ) * 100
-      ) / 100;
-  }
-
   return {
-    fee,
-    total,
-    discountAmt
+    fee: 0,
+    total: checkoutState.price,
+    discountAmt: 0
   };
 }
 
-// ----------------------------------------------------------------
-// Render checkout totals
-// ----------------------------------------------------------------
+// ================================================================
+// RENDER CHECKOUT TOTALS
+// ================================================================
 
 function renderCheckoutTotals() {
-  if (!checkoutState) return;
+  if (!checkoutState) {
+    return;
+  }
 
   const {
-    fee,
-    total,
-    discountAmt
+    total
   } = currentTotal();
 
   if (checkoutPrice) {
     checkoutPrice.textContent =
-      formatGHS(
-        checkoutState.price
-      );
+      formatGHS(checkoutState.price);
   }
 
   if (checkoutFee) {
     checkoutFee.textContent =
-      `+${formatGHS(fee)} fee` +
-      (
-        appliedPromo
-          ? ` · −${formatGHS(discountAmt)} (${appliedPromo.code})`
-          : ''
-      );
+      'Paystack fee applied at checkout';
   }
 
   if (checkoutPayLabel) {
@@ -984,14 +954,11 @@ function renderCheckoutTotals() {
   }
 }
 
-// ----------------------------------------------------------------
-// Open checkout modal
-// ----------------------------------------------------------------
+// ================================================================
+// OPEN CHECKOUT MODAL
+// ================================================================
 
-function openCheckoutModal(
-  net,
-  index
-) {
+function openCheckoutModal(net, index) {
   const netData =
     BUY_BUNDLES[net];
 
@@ -999,44 +966,37 @@ function openCheckoutModal(
     netData &&
     netData.plans[index];
 
-  if (!plan) return;
+  if (!plan) {
+    console.error(
+      'Plus Data: Selected package could not be found.'
+    );
+
+    return;
+  }
 
   checkoutState = {
-    net,
+    net: net,
+
     size: plan.size,
-    price: parseFloat(
-      plan.price
-    ),
+
+    price: parseFloat(plan.price),
+
     packageId:
       plan.packageId ||
       plan.id ||
       null,
+
     packageName:
       plan.packageName ||
       plan.size
   };
 
-  appliedPromo = null;
-
-  if (checkoutPromoInput) {
-    checkoutPromoInput.value = '';
-  }
-
-  if (checkoutPromoMsg) {
-    checkoutPromoMsg.textContent = '';
-
-    checkoutPromoMsg.className =
-      'checkout-promo-msg';
-  }
-
-  if (checkoutPromoPanel) {
-    checkoutPromoPanel.classList.remove(
-      'show'
-    );
-  }
-
   if (checkoutPhone) {
     checkoutPhone.value = '';
+  }
+
+  if (checkoutEmail) {
+    checkoutEmail.value = '';
   }
 
   if (checkoutPhoneError) {
@@ -1045,10 +1005,11 @@ function openCheckoutModal(
     );
   }
 
-  if (!checkoutModal) return;
+  if (!checkoutModal) {
+    return;
+  }
 
-  checkoutModal.dataset.network =
-    net;
+  checkoutModal.dataset.network = net;
 
   if (checkoutNetName) {
     checkoutNetName.textContent =
@@ -1062,17 +1023,15 @@ function openCheckoutModal(
 
   renderCheckoutTotals();
 
-  checkoutModal.classList.add(
-    'open'
-  );
+  checkoutModal.classList.add('open');
 
   document.body.style.overflow =
     'hidden';
 }
 
-// ----------------------------------------------------------------
-// Close checkout modal
-// ----------------------------------------------------------------
+// ================================================================
+// CLOSE CHECKOUT MODAL
+// ================================================================
 
 function closeCheckoutModal() {
   if (checkoutModal) {
@@ -1081,9 +1040,12 @@ function closeCheckoutModal() {
     );
   }
 
-  document.body.style.overflow =
-    '';
+  document.body.style.overflow = '';
 }
+
+// ================================================================
+// CHECKOUT CLOSE BUTTON
+// ================================================================
 
 if (checkoutCloseBtn) {
   checkoutCloseBtn.addEventListener(
@@ -1092,13 +1054,16 @@ if (checkoutCloseBtn) {
   );
 }
 
+// ================================================================
+// CLICK OUTSIDE CHECKOUT MODAL
+// ================================================================
+
 if (checkoutModal) {
   checkoutModal.addEventListener(
     'click',
     (e) => {
       if (
-        e.target ===
-        checkoutModal
+        e.target === checkoutModal
       ) {
         closeCheckoutModal();
       }
@@ -1106,134 +1071,58 @@ if (checkoutModal) {
   );
 }
 
-// ----------------------------------------------------------------
-// Promo toggle
-// ----------------------------------------------------------------
+// ================================================================
+// PROMO UI
+// ================================================================
+//
+// Promo functionality remains disabled for the live Paystack
+// checkout until a real promo system is connected to the backend.
+//
+// ================================================================
 
-if (
-  checkoutPromoToggle &&
-  checkoutPromoPanel
-) {
-  checkoutPromoToggle.addEventListener(
-    'click',
-    () => {
-      checkoutPromoPanel.classList.toggle(
-        'show'
-      );
-    }
+if (checkoutPromoToggle) {
+  checkoutPromoToggle.style.display =
+    'none';
+}
+
+if (checkoutPromoPanel) {
+  checkoutPromoPanel.classList.remove(
+    'show'
   );
 }
 
-// ----------------------------------------------------------------
-// Promo code application
-// ----------------------------------------------------------------
+// ================================================================
+// NORMALIZE GHANA PHONE NUMBER
+// ================================================================
 
-if (checkoutPromoApply) {
-  checkoutPromoApply.addEventListener(
-    'click',
-    () => {
-      const code =
-        checkoutPromoInput
-          ? checkoutPromoInput.value
-              .trim()
-              .toUpperCase()
-          : '';
+function normalizePhone(value) {
+  let d = String(value || '')
+    .replace(/[\s\-()]/g, '');
 
-      if (!code) {
-        appliedPromo = null;
-
-        if (checkoutPromoMsg) {
-          checkoutPromoMsg.textContent =
-            'Enter a code to apply.';
-
-          checkoutPromoMsg.className =
-            'checkout-promo-msg error';
-        }
-
-        renderCheckoutTotals();
-
-        return;
-      }
-
-      if (
-        Object.prototype.hasOwnProperty.call(
-          PROMO_CODES,
-          code
-        )
-      ) {
-        appliedPromo = {
-          code,
-          discount:
-            PROMO_CODES[code]
-        };
-
-        if (checkoutPromoMsg) {
-          checkoutPromoMsg.textContent =
-            `Promo "${code}" applied.`;
-
-          checkoutPromoMsg.className =
-            'checkout-promo-msg success';
-        }
-      } else {
-        appliedPromo = null;
-
-        if (checkoutPromoMsg) {
-          checkoutPromoMsg.textContent =
-            'Invalid promo code.';
-
-          checkoutPromoMsg.className =
-            'checkout-promo-msg error';
-        }
-      }
-
-      renderCheckoutTotals();
-    }
-  );
-}
-
-// ----------------------------------------------------------------
-// Normalize Ghana phone number
-// ----------------------------------------------------------------
-
-function normalizePhone(v) {
-  let d = String(v || '')
-    .replace(
-      /[\s\-()]/g,
-      ''
-    );
-
-  if (
-    d.startsWith('+233')
-  ) {
-    d =
-      '0' +
-      d.slice(4);
+  if (d.startsWith('+233')) {
+    d = '0' + d.slice(4);
   } else if (
     d.startsWith('233') &&
     d.length === 12
   ) {
-    d =
-      '0' +
-      d.slice(3);
+    d = '0' + d.slice(3);
   }
 
   return d;
 }
 
-// ----------------------------------------------------------------
-// Validate Ghana phone number
-// ----------------------------------------------------------------
+// ================================================================
+// VALIDATE GHANA PHONE NUMBER
+// ================================================================
 
 function isValidGhanaNumber(
-  v,
+  value,
   net
 ) {
   const d =
-    normalizePhone(v);
+    normalizePhone(value);
 
-  if (
-    !/^0\d{9}$/.test(d)
-  ) {
+  if (!/^0\d{9}$/.test(d)) {
     return false;
   }
 
@@ -1251,9 +1140,9 @@ function isValidGhanaNumber(
   );
 }
 
-// ----------------------------------------------------------------
-// Phone input validation
-// ----------------------------------------------------------------
+// ================================================================
+// PHONE ERROR CLEAR
+// ================================================================
 
 if (
   checkoutPhone &&
@@ -1269,17 +1158,45 @@ if (
   );
 }
 
-// ----------------------------------------------------------------
-// Checkout / WhatsApp
-// ----------------------------------------------------------------
+// ================================================================
+// EMAIL VALIDATION
+// ================================================================
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    String(value || '').trim()
+  );
+}
+
+if (checkoutEmail) {
+  checkoutEmail.addEventListener(
+    'input',
+    () => {
+      checkoutEmail.setCustomValidity(
+        ''
+      );
+    }
+  );
+}
+
+// ================================================================
+// LIVE PAYSTACK CHECKOUT
+// ================================================================
 
 if (checkoutPayBtn) {
   checkoutPayBtn.addEventListener(
     'click',
-    () => {
-      if (!checkoutState) {
+    async () => {
+      if (
+        !checkoutState ||
+        !supabaseClient
+      ) {
         return;
       }
+
+      // ----------------------------------------------------------
+      // VALIDATE PHONE
+      // ----------------------------------------------------------
 
       if (
         !checkoutPhone ||
@@ -1311,53 +1228,250 @@ if (checkoutPayBtn) {
         return;
       }
 
-      const {
-        fee,
-        total
-      } = currentTotal();
+      // ----------------------------------------------------------
+      // VALIDATE EMAIL
+      // ----------------------------------------------------------
 
-      const netLabel =
-        BUY_BUNDLES[
-          checkoutState.net
-        ].label;
-
-      const promoPart =
-        appliedPromo
-          ? `, promo ${appliedPromo.code} applied`
+      const email =
+        checkoutEmail
+          ? checkoutEmail.value
+              .trim()
+              .toLowerCase()
           : '';
 
-      const msg =
-        encodeURIComponent(
-          `Hi Plus Data, I'd like to buy ${checkoutState.size} ${netLabel} for ` +
-          `${formatGHS(checkoutState.price)} (+${formatGHS(fee)} fee${promoPart}) = ${formatGHS(total)}. ` +
-          `Recipient: ${normalizePhone(checkoutPhone.value)}. ` +
-          `Package ID: ${checkoutState.packageId || 'N/A'}. ` +
-          `Lock-screen alert: ${
-            checkoutLockToggle &&
-            checkoutLockToggle.checked
-              ? 'On'
-              : 'Off'
-          }.`
+      if (!isValidEmail(email)) {
+        alert(
+          'Please enter a valid email address for your Paystack receipt.'
         );
 
+        if (checkoutEmail) {
+          checkoutEmail.focus();
+        }
+
+        return;
+      }
+
       // ----------------------------------------------------------
-      // CURRENT CHECKOUT DESTINATION
-      // ----------------------------------------------------------
-      // Replace 233000000000 with the real Plus Data WhatsApp number.
-      // Paystack/backend checkout will replace this later.
+      // DISABLE BUTTON
       // ----------------------------------------------------------
 
-      window.open(
-        `https://wa.me/233000000000?text=${msg}`,
-        '_blank'
-      );
+      checkoutPayBtn.disabled = true;
+
+      const originalLabel =
+        checkoutPayLabel
+          ? checkoutPayLabel.textContent
+          : '';
+
+      if (checkoutPayLabel) {
+        checkoutPayLabel.textContent =
+          'STARTING SECURE PAYMENT...';
+      }
+
+      // ----------------------------------------------------------
+      // START PAYSTACK CHECKOUT
+      // ----------------------------------------------------------
+
+      try {
+        const response =
+          await fetch(
+            `${SUPABASE_URL}/functions/v1/paystack-initialize`,
+            {
+              method: 'POST',
+
+              headers: {
+                'Content-Type':
+                  'application/json',
+
+                apikey:
+                  SUPABASE_PUBLISHABLE_KEY
+              },
+
+              body: JSON.stringify({
+                package_id:
+                  checkoutState.packageId,
+
+                customer_phone:
+                  normalizePhone(
+                    checkoutPhone.value
+                  ),
+
+                customer_email:
+                  email
+              })
+            }
+          );
+
+        let result = null;
+
+        try {
+          result =
+            await response.json();
+        } catch {
+          result = null;
+        }
+
+        if (
+          !response.ok ||
+          !result ||
+          !result.success ||
+          !result.authorization_url
+        ) {
+          throw new Error(
+            result?.error ||
+              'Unable to start Paystack checkout.'
+          );
+        }
+
+        // --------------------------------------------------------
+        // STORE PAYMENT REFERENCE
+        // --------------------------------------------------------
+
+        if (result.reference) {
+          sessionStorage.setItem(
+            'plusdata_paystack_reference',
+            result.reference
+          );
+        }
+
+        if (result.order_id) {
+          sessionStorage.setItem(
+            'plusdata_order_id',
+            result.order_id
+          );
+        }
+
+        // --------------------------------------------------------
+        // CLOSE MODAL
+        // --------------------------------------------------------
+
+        closeCheckoutModal();
+
+        // --------------------------------------------------------
+        // REDIRECT TO PAYSTACK
+        // --------------------------------------------------------
+
+        window.location.href =
+          result.authorization_url;
+      } catch (error) {
+        console.error(
+          'Plus Data: Paystack initialization failed:',
+          error
+        );
+
+        alert(
+          error?.message ||
+            'We could not start the payment. Please try again.'
+        );
+
+        checkoutPayBtn.disabled = false;
+
+        if (checkoutPayLabel) {
+          checkoutPayLabel.textContent =
+            originalLabel ||
+            'PAY & DELIVER';
+        }
+
+        return;
+      }
+
+      checkoutPayBtn.disabled = false;
     }
   );
 }
 
-// ----------------------------------------------------------------
-// Chatbot widget
-// ----------------------------------------------------------------
+// ================================================================
+// PAYSTACK CALLBACK / VERIFICATION
+// ================================================================
+
+async function handlePaystackCallback() {
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const reference =
+    params.get('reference');
+
+  if (!reference) {
+    return;
+  }
+
+  try {
+    const response =
+      await fetch(
+        `${SUPABASE_URL}/functions/v1/paystack-verify`,
+        {
+          method: 'POST',
+
+          headers: {
+            'Content-Type':
+              'application/json',
+
+            apikey:
+              SUPABASE_PUBLISHABLE_KEY
+          },
+
+          body: JSON.stringify({
+            reference
+          })
+        }
+      );
+
+    let result = null;
+
+    try {
+      result =
+        await response.json();
+    } catch {
+      result = null;
+    }
+
+    if (
+      response.ok &&
+      result &&
+      result.verified &&
+      result.payment_status ===
+        'success'
+    ) {
+      sessionStorage.removeItem(
+        'plusdata_paystack_reference'
+      );
+
+      sessionStorage.removeItem(
+        'plusdata_order_id'
+      );
+
+      alert(
+        'Payment confirmed successfully. Your Plus Data order is now being processed.'
+      );
+    } else {
+      alert(
+        result?.message ||
+          result?.error ||
+          'Payment could not be confirmed yet. Please contact Plus Data support with your payment reference.'
+      );
+    }
+  } catch (error) {
+    console.error(
+      'Plus Data: Paystack callback verification failed:',
+      error
+    );
+
+    alert(
+      'We could not confirm the payment automatically. Please contact Plus Data support with your payment reference.'
+    );
+  } finally {
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname
+    );
+  }
+}
+
+// ================================================================
+// CHATBOT WIDGET
+// ================================================================
 
 const chatbotToggle =
   document.getElementById(
@@ -1392,12 +1506,14 @@ const chatbotSend =
     'chatbotSend'
   );
 
-// ----------------------------------------------------------------
-// Open chatbot
-// ----------------------------------------------------------------
+// ================================================================
+// CHATBOT OPEN / CLOSE
+// ================================================================
 
 function openChatbot() {
-  if (!chatbotPanel) return;
+  if (!chatbotPanel) {
+    return;
+  }
 
   chatbotPanel.classList.add(
     'open'
@@ -1411,12 +1527,10 @@ function openChatbot() {
   }
 }
 
-// ----------------------------------------------------------------
-// Close chatbot
-// ----------------------------------------------------------------
-
 function closeChatbot() {
-  if (!chatbotPanel) return;
+  if (!chatbotPanel) {
+    return;
+  }
 
   chatbotPanel.classList.remove(
     'open'
@@ -1430,21 +1544,23 @@ function closeChatbot() {
   }
 }
 
-// ----------------------------------------------------------------
-// Chatbot toggle
-// ----------------------------------------------------------------
-
 if (chatbotToggle) {
   chatbotToggle.addEventListener(
     'click',
     () => {
-      if (!chatbotPanel) return;
+      if (!chatbotPanel) {
+        return;
+      }
 
-      chatbotPanel.classList.contains(
-        'open'
-      )
-        ? closeChatbot()
-        : openChatbot();
+      if (
+        chatbotPanel.classList.contains(
+          'open'
+        )
+      ) {
+        closeChatbot();
+      } else {
+        openChatbot();
+      }
     }
   );
 }
@@ -1456,15 +1572,17 @@ if (chatbotClose) {
   );
 }
 
-// ----------------------------------------------------------------
-// Add chatbot message
-// ----------------------------------------------------------------
+// ================================================================
+// CHATBOT MESSAGE BUBBLE
+// ================================================================
 
 function addBubble(
   text,
   fromUser
 ) {
-  if (!chatbotBody) return;
+  if (!chatbotBody) {
+    return;
+  }
 
   const bubble =
     document.createElement(
@@ -1474,8 +1592,7 @@ function addBubble(
   bubble.className =
     'chatbot-bubble';
 
-  bubble.textContent =
-    text;
+  bubble.textContent = text;
 
   if (fromUser) {
     bubble.style.alignSelf =
@@ -1499,17 +1616,21 @@ function addBubble(
     chatbotBody.scrollHeight;
 }
 
-// ----------------------------------------------------------------
-// Send chatbot message
-// ----------------------------------------------------------------
+// ================================================================
+// CHATBOT SEND MESSAGE
+// ================================================================
 
 function sendMessage() {
-  if (!chatbotInput) return;
+  if (!chatbotInput) {
+    return;
+  }
 
   const text =
     chatbotInput.value.trim();
 
-  if (!text) return;
+  if (!text) {
+    return;
+  }
 
   addBubble(
     text,
@@ -1537,21 +1658,25 @@ if (chatbotInput) {
   chatbotInput.addEventListener(
     'keydown',
     (e) => {
-      if (
-        e.key === 'Enter'
-      ) {
+      if (e.key === 'Enter') {
         sendMessage();
       }
     }
   );
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 // INITIALIZE SUPABASE PACKAGES
-// ----------------------------------------------------------------
+// ================================================================
 
 loadPackagesFromSupabase();
 
-// ----------------------------------------------------------------
+// ================================================================
+// CHECK FOR PAYSTACK CALLBACK
+// ================================================================
+
+handlePaystackCallback();
+
+// ================================================================
 // END OF APP.JS
-// ----------------------------------------------------------------
+// ================================================================
