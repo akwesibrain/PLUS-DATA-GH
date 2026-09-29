@@ -2,6 +2,7 @@
 // PLUS DATA GHANA — MAIN FRONTEND JAVASCRIPT
 // ================================================================
 
+
 // ================================================================
 // LIGHT / DARK THEME TOGGLE
 // ================================================================
@@ -12,6 +13,7 @@ const SUN_PATH =
 
 const MOON_PATH =
   '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>';
+
 
 // ================================================================
 // HERO VIDEO — RESPECT REDUCED MOTION
@@ -27,6 +29,7 @@ if (
   heroVideo.removeAttribute('autoplay');
 }
 
+
 // ================================================================
 // THEME
 // ================================================================
@@ -35,7 +38,9 @@ const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
 
 function applyTheme(theme) {
-  if (!themeIcon) return;
+  if (!themeIcon) {
+    return;
+  }
 
   if (theme === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
@@ -61,6 +66,7 @@ if (themeToggle) {
     localStorage.setItem('pd-theme', next);
   });
 }
+
 
 // ================================================================
 // MOBILE MENU
@@ -88,6 +94,7 @@ if (menuToggle && nav) {
   });
 }
 
+
 // ================================================================
 // NETWORK COLOURS
 // ================================================================
@@ -97,6 +104,7 @@ const netColors = {
   telecel: 'var(--telecel)',
   at: 'var(--at)'
 };
+
 
 // ================================================================
 // PURCHASE TICKER
@@ -141,7 +149,8 @@ function randInt(min, max) {
 }
 
 function maskedMomo(prefixes) {
-  const pre = prefixes[randInt(0, prefixes.length - 1)];
+  const pre =
+    prefixes[randInt(0, prefixes.length - 1)];
 
   return (
     pre +
@@ -158,10 +167,14 @@ const tickerItems = Array.from(
   { length: 14 },
   () => {
     const net =
-      GH_NETS[randInt(0, GH_NETS.length - 1)];
+      GH_NETS[
+        randInt(0, GH_NETS.length - 1)
+      ];
 
     const size =
-      GH_SIZES[randInt(0, GH_SIZES.length - 1)];
+      GH_SIZES[
+        randInt(0, GH_SIZES.length - 1)
+      ];
 
     return {
       net: net.key,
@@ -177,7 +190,8 @@ const tickerItems = Array.from(
   }
 );
 
-const track = document.getElementById('tickerTrack');
+const track =
+  document.getElementById('tickerTrack');
 
 if (track) {
   const itemsHTML = tickerItems
@@ -192,8 +206,10 @@ if (track) {
     )
     .join('');
 
-  track.innerHTML = itemsHTML + itemsHTML;
+  track.innerHTML =
+    itemsHTML + itemsHTML;
 }
+
 
 // ================================================================
 // SUPABASE CONNECTION
@@ -211,15 +227,17 @@ if (
   window.supabase &&
   typeof window.supabase.createClient === 'function'
 ) {
-  supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+  supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 } else {
   console.error(
     'Plus Data: Supabase library was not loaded. Make sure index.html loads @supabase/supabase-js before app.js.'
   );
 }
+
 
 // ================================================================
 // BUY DATA MODAL
@@ -245,6 +263,7 @@ const BUY_BUNDLES = {
   }
 };
 
+
 // ================================================================
 // SUPABASE NETWORK MAPPING
 // ================================================================
@@ -260,6 +279,26 @@ const NETWORK_KEY = {
 
 let packagesLoaded = false;
 let packagesLoading = false;
+
+
+// ================================================================
+// BUY DATA DOM
+// ================================================================
+
+const buyModal =
+  document.getElementById('buyModal');
+
+const buyCloseBtn =
+  document.getElementById('buyCloseBtn');
+
+const buyNetTabs =
+  document.getElementById('buyNetTabs');
+
+const buyBundleGrid =
+  document.getElementById('buyBundleGrid');
+
+let activeNet = 'mtn';
+
 
 // ================================================================
 // LOAD PACKAGES FROM SUPABASE
@@ -329,7 +368,8 @@ async function loadPackagesFromSupabase() {
         continue;
       }
 
-      const numericPrice = Number(row.price);
+      const numericPrice =
+        Number(row.price);
 
       if (
         !Number.isFinite(numericPrice) ||
@@ -345,13 +385,18 @@ async function loadPackagesFromSupabase() {
 
       BUY_BUNDLES[networkKey].plans.push({
         id: row.id,
+
         packageId: row.id,
 
         packageName:
-          String(row.package_name || '').trim(),
+          String(
+            row.package_name || ''
+          ).trim(),
 
         size:
-          String(row.data_amount || '').trim(),
+          String(
+            row.data_amount || ''
+          ).trim(),
 
         price:
           numericPrice.toFixed(2)
@@ -385,23 +430,6 @@ async function loadPackagesFromSupabase() {
   }
 }
 
-// ================================================================
-// BUY DATA DOM
-// ================================================================
-
-const buyModal =
-  document.getElementById('buyModal');
-
-const buyCloseBtn =
-  document.getElementById('buyCloseBtn');
-
-const buyNetTabs =
-  document.getElementById('buyNetTabs');
-
-const buyBundleGrid =
-  document.getElementById('buyBundleGrid');
-
-let activeNet = 'mtn';
 
 // ================================================================
 // RENDER BUY BUNDLES
@@ -412,7 +440,8 @@ function renderBuyBundles(net) {
     return;
   }
 
-  const data = BUY_BUNDLES[net];
+  const data =
+    BUY_BUNDLES[net];
 
   if (!data) {
     console.error(
@@ -504,6 +533,7 @@ function renderBuyBundles(net) {
       .join('');
 }
 
+
 // ================================================================
 // SELECT BUY CARD
 // ================================================================
@@ -529,6 +559,77 @@ function selectBuyCard(net, index) {
   }
 }
 
+
+// ================================================================
+// OPEN CHECKOUT
+// ================================================================
+
+function openCheckoutModal(net, index) {
+  const netData =
+    BUY_BUNDLES[net];
+
+  const plan =
+    netData &&
+    netData.plans[index];
+
+  if (!plan) {
+    console.error(
+      'Plus Data: Selected package could not be found.'
+    );
+
+    return;
+  }
+
+  checkoutState = {
+    net,
+    size: plan.size,
+    price: parseFloat(plan.price),
+    packageId:
+      plan.packageId ||
+      plan.id ||
+      null,
+    packageName:
+      plan.packageName ||
+      plan.size
+  };
+
+  if (checkoutPhone) {
+    checkoutPhone.value = '';
+  }
+
+  if (checkoutEmail) {
+    checkoutEmail.value = '';
+  }
+
+  if (checkoutPhoneError) {
+    checkoutPhoneError.classList.remove('show');
+  }
+
+  if (!checkoutModal) {
+    return;
+  }
+
+  checkoutModal.dataset.network = net;
+
+  if (checkoutNetName) {
+    checkoutNetName.textContent =
+      NETWORK_UI[net].display;
+  }
+
+  if (checkoutSize) {
+    checkoutSize.textContent =
+      plan.size;
+  }
+
+  renderCheckoutTotals();
+
+  checkoutModal.classList.add('open');
+
+  document.body.style.overflow =
+    'hidden';
+}
+
+
 // ================================================================
 // BUY BUNDLE CLICK
 // ================================================================
@@ -538,21 +639,33 @@ if (buyBundleGrid) {
     'click',
     (e) => {
       const card =
-        e.target.closest('.buy-bundle-card');
+        e.target.closest(
+          '.buy-bundle-card'
+        );
 
       if (!card) {
         return;
       }
 
-      const net = card.dataset.net;
-      const index = Number(card.dataset.index);
+      const net =
+        card.dataset.net;
 
-      selectBuyCard(net, index);
+      const index =
+        Number(card.dataset.index);
 
-      openCheckoutModal(net, index);
+      selectBuyCard(
+        net,
+        index
+      );
+
+      openCheckoutModal(
+        net,
+        index
+      );
     }
   );
 }
+
 
 // ================================================================
 // NETWORK TABS
@@ -563,28 +676,40 @@ if (buyNetTabs) {
     'click',
     (e) => {
       const tab =
-        e.target.closest('.buy-net-tab');
+        e.target.closest(
+          '.buy-net-tab'
+        );
 
       if (!tab) {
         return;
       }
 
       document
-        .querySelectorAll('.buy-net-tab')
+        .querySelectorAll(
+          '.buy-net-tab'
+        )
         .forEach((t) => {
-          t.classList.remove('active');
+          t.classList.remove(
+            'active'
+          );
         });
 
-      tab.classList.add('active');
+      tab.classList.add(
+        'active'
+      );
 
-      activeNet = tab.dataset.net;
+      activeNet =
+        tab.dataset.net;
 
       if (packagesLoaded) {
-        renderBuyBundles(activeNet);
+        renderBuyBundles(
+          activeNet
+        );
       }
     }
   );
 }
+
 
 // ================================================================
 // OPEN BUY MODAL
@@ -598,7 +723,9 @@ function openBuyModal(net) {
     activeNet = net;
 
     document
-      .querySelectorAll('.buy-net-tab')
+      .querySelectorAll(
+        '.buy-net-tab'
+      )
       .forEach((tab) => {
         tab.classList.toggle(
           'active',
@@ -608,13 +735,18 @@ function openBuyModal(net) {
   }
 
   if (buyModal) {
-    buyModal.classList.add('open');
+    buyModal.classList.add(
+      'open'
+    );
 
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow =
+      'hidden';
   }
 
   if (packagesLoaded) {
-    renderBuyBundles(activeNet);
+    renderBuyBundles(
+      activeNet
+    );
 
     return;
   }
@@ -630,7 +762,9 @@ function openBuyModal(net) {
   loadPackagesFromSupabase().then(
     (success) => {
       if (success) {
-        renderBuyBundles(activeNet);
+        renderBuyBundles(
+          activeNet
+        );
 
         return;
       }
@@ -659,8 +793,9 @@ function openBuyModal(net) {
             'click',
             () => {
               packagesLoaded = false;
-
-              openBuyModal(activeNet);
+              openBuyModal(
+                activeNet
+              );
             }
           );
         }
@@ -669,24 +804,31 @@ function openBuyModal(net) {
   );
 }
 
+
 // ================================================================
 // CLOSE BUY MODAL
 // ================================================================
 
 function closeBuyModal() {
   if (buyModal) {
-    buyModal.classList.remove('open');
+    buyModal.classList.remove(
+      'open'
+    );
   }
 
-  document.body.style.overflow = '';
+  document.body.style.overflow =
+    '';
 }
+
 
 // ================================================================
 // BUY TRIGGERS
 // ================================================================
 
 document
-  .querySelectorAll('.buy-trigger')
+  .querySelectorAll(
+    '.buy-trigger'
+  )
   .forEach((trigger) => {
     trigger.addEventListener(
       'click',
@@ -707,12 +849,15 @@ if (buyCloseBtn) {
   );
 }
 
+
 // ================================================================
 // BUY TRACK LINK
 // ================================================================
 
 const buyTrackLink =
-  document.getElementById('buyTrackLink');
+  document.getElementById(
+    'buyTrackLink'
+  );
 
 if (buyTrackLink) {
   buyTrackLink.addEventListener(
@@ -723,10 +868,14 @@ if (buyTrackLink) {
       closeBuyModal();
 
       const top =
-        document.getElementById('top');
+        document.getElementById(
+          'top'
+        );
 
       const footerTrack =
-        document.querySelector('footer#track');
+        document.querySelector(
+          'footer#track'
+        );
 
       if (top) {
         top.scrollIntoView();
@@ -742,6 +891,7 @@ if (buyTrackLink) {
     }
   );
 }
+
 
 // ================================================================
 // DYNAMIC NETWORK CHECKOUT
@@ -782,11 +932,13 @@ const NETWORK_UI = {
   }
 };
 
+
 // ================================================================
 // NETWORK PHONE VALIDATION
 // ================================================================
 
 const STRICT_NETWORK_PREFIX = true;
+
 
 // ================================================================
 // CHECKOUT HELPERS
@@ -798,6 +950,7 @@ function formatGHS(n) {
     Number(n).toFixed(2)
   );
 }
+
 
 // ================================================================
 // CHECKOUT DOM
@@ -890,22 +1043,15 @@ const checkoutPayLabel =
 
 let checkoutState = null;
 
+
 // ================================================================
 // CHECKOUT TOTAL
 // ================================================================
 //
-// IMPORTANT:
-//
 // Plus Data does NOT add a processing fee.
 //
-// The package price is the amount sent to Paystack.
-// Your approved Paystack customer fee is handled by Paystack.
-//
-// Example:
-//
-// Package = GH₵10.00
-// Plus Data amount = GH₵10.00
-// Paystack handles its approved customer fee.
+// The package price is sent to Paystack.
+// Paystack handles the approved customer fee.
 //
 // ================================================================
 
@@ -925,6 +1071,7 @@ function currentTotal() {
   };
 }
 
+
 // ================================================================
 // RENDER CHECKOUT TOTALS
 // ================================================================
@@ -940,7 +1087,9 @@ function renderCheckoutTotals() {
 
   if (checkoutPrice) {
     checkoutPrice.textContent =
-      formatGHS(checkoutState.price);
+      formatGHS(
+        checkoutState.price
+      );
   }
 
   if (checkoutFee) {
@@ -954,80 +1103,6 @@ function renderCheckoutTotals() {
   }
 }
 
-// ================================================================
-// OPEN CHECKOUT MODAL
-// ================================================================
-
-function openCheckoutModal(net, index) {
-  const netData =
-    BUY_BUNDLES[net];
-
-  const plan =
-    netData &&
-    netData.plans[index];
-
-  if (!plan) {
-    console.error(
-      'Plus Data: Selected package could not be found.'
-    );
-
-    return;
-  }
-
-  checkoutState = {
-    net: net,
-
-    size: plan.size,
-
-    price: parseFloat(plan.price),
-
-    packageId:
-      plan.packageId ||
-      plan.id ||
-      null,
-
-    packageName:
-      plan.packageName ||
-      plan.size
-  };
-
-  if (checkoutPhone) {
-    checkoutPhone.value = '';
-  }
-
-  if (checkoutEmail) {
-    checkoutEmail.value = '';
-  }
-
-  if (checkoutPhoneError) {
-    checkoutPhoneError.classList.remove(
-      'show'
-    );
-  }
-
-  if (!checkoutModal) {
-    return;
-  }
-
-  checkoutModal.dataset.network = net;
-
-  if (checkoutNetName) {
-    checkoutNetName.textContent =
-      NETWORK_UI[net].display;
-  }
-
-  if (checkoutSize) {
-    checkoutSize.textContent =
-      plan.size;
-  }
-
-  renderCheckoutTotals();
-
-  checkoutModal.classList.add('open');
-
-  document.body.style.overflow =
-    'hidden';
-}
 
 // ================================================================
 // CLOSE CHECKOUT MODAL
@@ -1040,8 +1115,10 @@ function closeCheckoutModal() {
     );
   }
 
-  document.body.style.overflow = '';
+  document.body.style.overflow =
+    '';
 }
+
 
 // ================================================================
 // CHECKOUT CLOSE BUTTON
@@ -1054,6 +1131,7 @@ if (checkoutCloseBtn) {
   );
 }
 
+
 // ================================================================
 // CLICK OUTSIDE CHECKOUT MODAL
 // ================================================================
@@ -1063,7 +1141,8 @@ if (checkoutModal) {
     'click',
     (e) => {
       if (
-        e.target === checkoutModal
+        e.target ===
+        checkoutModal
       ) {
         closeCheckoutModal();
       }
@@ -1071,13 +1150,9 @@ if (checkoutModal) {
   );
 }
 
+
 // ================================================================
 // PROMO UI
-// ================================================================
-//
-// Promo functionality remains disabled for the live Paystack
-// checkout until a real promo system is connected to the backend.
-//
 // ================================================================
 
 if (checkoutPromoToggle) {
@@ -1091,25 +1166,32 @@ if (checkoutPromoPanel) {
   );
 }
 
+
 // ================================================================
 // NORMALIZE GHANA PHONE NUMBER
 // ================================================================
 
 function normalizePhone(value) {
-  let d = String(value || '')
-    .replace(/[\s\-()]/g, '');
+  let d =
+    String(value || '')
+      .replace(/[\s\-()]/g, '');
 
   if (d.startsWith('+233')) {
-    d = '0' + d.slice(4);
+    d =
+      '0' +
+      d.slice(4);
   } else if (
     d.startsWith('233') &&
     d.length === 12
   ) {
-    d = '0' + d.slice(3);
+    d =
+      '0' +
+      d.slice(3);
   }
 
   return d;
 }
+
 
 // ================================================================
 // VALIDATE GHANA PHONE NUMBER
@@ -1133,12 +1215,13 @@ function isValidGhanaNumber(
     return true;
   }
 
-  return NETWORK_UI[
-    net
-  ].prefixes.includes(
-    d.slice(0, 3)
-  );
+  return NETWORK_UI[net]
+    .prefixes
+    .includes(
+      d.slice(0, 3)
+    );
 }
+
 
 // ================================================================
 // PHONE ERROR CLEAR
@@ -1157,6 +1240,7 @@ if (
     }
   );
 }
+
 
 // ================================================================
 // EMAIL VALIDATION
@@ -1178,6 +1262,7 @@ if (checkoutEmail) {
     }
   );
 }
+
 
 // ================================================================
 // LIVE PAYSTACK CHECKOUT
@@ -1255,7 +1340,8 @@ if (checkoutPayBtn) {
       // DISABLE BUTTON
       // ----------------------------------------------------------
 
-      checkoutPayBtn.disabled = true;
+      checkoutPayBtn.disabled =
+        true;
 
       const originalLabel =
         checkoutPayLabel
@@ -1363,7 +1449,8 @@ if (checkoutPayBtn) {
             'We could not start the payment. Please try again.'
         );
 
-        checkoutPayBtn.disabled = false;
+        checkoutPayBtn.disabled =
+          false;
 
         if (checkoutPayLabel) {
           checkoutPayLabel.textContent =
@@ -1374,10 +1461,12 @@ if (checkoutPayBtn) {
         return;
       }
 
-      checkoutPayBtn.disabled = false;
+      checkoutPayBtn.disabled =
+        false;
     }
   );
 }
+
 
 // ================================================================
 // PAYSTACK CALLBACK / VERIFICATION
@@ -1469,6 +1558,7 @@ async function handlePaystackCallback() {
   }
 }
 
+
 // ================================================================
 // CHATBOT WIDGET
 // ================================================================
@@ -1506,6 +1596,17 @@ const chatbotSend =
     'chatbotSend'
   );
 
+
+// ================================================================
+// CHATBOT STATE
+// ================================================================
+
+let chatbotBusy = false;
+
+const CHATBOT_FUNCTION_URL =
+  `${SUPABASE_URL}/functions/v1/ai-assistant`;
+
+
 // ================================================================
 // CHATBOT OPEN / CLOSE
 // ================================================================
@@ -1525,6 +1626,12 @@ function openChatbot() {
       'true'
     );
   }
+
+  setTimeout(() => {
+    if (chatbotInput) {
+      chatbotInput.focus();
+    }
+  }, 100);
 }
 
 function closeChatbot() {
@@ -1572,16 +1679,17 @@ if (chatbotClose) {
   );
 }
 
+
 // ================================================================
 // CHATBOT MESSAGE BUBBLE
 // ================================================================
 
 function addBubble(
   text,
-  fromUser
+  fromUser = false
 ) {
   if (!chatbotBody) {
-    return;
+    return null;
   }
 
   const bubble =
@@ -1592,7 +1700,8 @@ function addBubble(
   bubble.className =
     'chatbot-bubble';
 
-  bubble.textContent = text;
+  bubble.textContent =
+    String(text || '');
 
   if (fromUser) {
     bubble.style.alignSelf =
@@ -1614,14 +1723,166 @@ function addBubble(
 
   chatbotBody.scrollTop =
     chatbotBody.scrollHeight;
+
+  return bubble;
 }
+
+
+// ================================================================
+// CHATBOT TYPING INDICATOR
+// ================================================================
+
+function addTypingBubble() {
+  if (!chatbotBody) {
+    return null;
+  }
+
+  const bubble =
+    document.createElement(
+      'div'
+    );
+
+  bubble.className =
+    'chatbot-bubble chatbot-typing';
+
+  bubble.textContent =
+    'Thinking...';
+
+  chatbotBody.appendChild(
+    bubble
+  );
+
+  chatbotBody.scrollTop =
+    chatbotBody.scrollHeight;
+
+  return bubble;
+}
+
+
+// ================================================================
+// REMOVE TYPING INDICATOR
+// ================================================================
+
+function removeTypingBubble(
+  bubble
+) {
+  if (
+    bubble &&
+    bubble.parentNode
+  ) {
+    bubble.parentNode.removeChild(
+      bubble
+    );
+  }
+}
+
+
+// ================================================================
+// BUILD AI PACKAGE CONTEXT
+// ================================================================
+
+function getAssistantPackageContext() {
+  return Object.entries(
+    BUY_BUNDLES
+  ).map(
+    ([networkKey, network]) => ({
+      network:
+        network.label,
+
+      packages:
+        network.plans.map(
+          (plan) => ({
+            id: plan.id,
+            package_name:
+              plan.packageName,
+            data_amount:
+              plan.size,
+            price:
+              plan.price
+          })
+        )
+    })
+  );
+}
+
+
+// ================================================================
+// SEND MESSAGE TO AI ASSISTANT
+// ================================================================
+
+async function askAI(message) {
+  const response =
+    await fetch(
+      CHATBOT_FUNCTION_URL,
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type':
+            'application/json',
+
+          apikey:
+            SUPABASE_PUBLISHABLE_KEY
+        },
+
+        body: JSON.stringify({
+          message,
+
+          context: {
+            business:
+              'Plus Data Ghana',
+
+            packages:
+              getAssistantPackageContext()
+          }
+        })
+      }
+    );
+
+  let result = null;
+
+  try {
+    result =
+      await response.json();
+  } catch {
+    result = null;
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      result?.error ||
+        'The AI assistant could not respond right now.'
+    );
+  }
+
+  // The deployed Edge Function returns:
+  // { reply: "..." }
+
+  if (
+    !result ||
+    typeof result.reply !==
+      'string' ||
+    !result.reply.trim()
+  ) {
+    throw new Error(
+      result?.error ||
+        'The AI assistant returned an invalid response.'
+    );
+  }
+
+  return result.reply.trim();
+}
+
 
 // ================================================================
 // CHATBOT SEND MESSAGE
 // ================================================================
 
-function sendMessage() {
-  if (!chatbotInput) {
+async function sendMessage() {
+  if (
+    !chatbotInput ||
+    chatbotBusy
+  ) {
     return;
   }
 
@@ -1637,15 +1898,69 @@ function sendMessage() {
     true
   );
 
-  chatbotInput.value = '';
+  chatbotInput.value =
+    '';
 
-  setTimeout(() => {
+  chatbotBusy =
+    true;
+
+  if (chatbotSend) {
+    chatbotSend.disabled =
+      true;
+  }
+
+  chatbotInput.disabled =
+    true;
+
+  const typingBubble =
+    addTypingBubble();
+
+  try {
+    const reply =
+      await askAI(text);
+
+    removeTypingBubble(
+      typingBubble
+    );
+
     addBubble(
-      "Thanks! This demo chat isn't wired to a live agent yet — for a real answer, tap WhatsApp Channel below and our team will help.",
+      reply,
       false
     );
-  }, 500);
+  } catch (error) {
+    console.error(
+      'Plus Data AI assistant error:',
+      error
+    );
+
+    removeTypingBubble(
+      typingBubble
+    );
+
+    addBubble(
+      'Sorry, I could not connect to the Plus Data assistant right now. Please try again in a moment or contact our support team.',
+      false
+    );
+  } finally {
+    chatbotBusy =
+      false;
+
+    if (chatbotSend) {
+      chatbotSend.disabled =
+        false;
+    }
+
+    chatbotInput.disabled =
+      false;
+
+    chatbotInput.focus();
+  }
 }
+
+
+// ================================================================
+// CHATBOT SEND BUTTON
+// ================================================================
 
 if (chatbotSend) {
   chatbotSend.addEventListener(
@@ -1654,16 +1969,23 @@ if (chatbotSend) {
   );
 }
 
+
+// ================================================================
+// CHATBOT ENTER KEY
+// ================================================================
+
 if (chatbotInput) {
   chatbotInput.addEventListener(
     'keydown',
     (e) => {
       if (e.key === 'Enter') {
+        e.preventDefault();
         sendMessage();
       }
     }
   );
 }
+
 
 // ================================================================
 // INITIALIZE SUPABASE PACKAGES
@@ -1671,11 +1993,38 @@ if (chatbotInput) {
 
 loadPackagesFromSupabase();
 
+
 // ================================================================
 // CHECK FOR PAYSTACK CALLBACK
 // ================================================================
 
 handlePaystackCallback();
+
+
+// ================================================================
+// CHATBOT DEBUG CHECK
+// ================================================================
+
+console.log(
+  'Plus Data chatbot:',
+  {
+    toggleFound:
+      !!chatbotToggle,
+
+    panelFound:
+      !!chatbotPanel,
+
+    inputFound:
+      !!chatbotInput,
+
+    sendButtonFound:
+      !!chatbotSend,
+
+    aiFunction:
+      CHATBOT_FUNCTION_URL
+  }
+);
+
 
 // ================================================================
 // END OF APP.JS
